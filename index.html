@@ -181,17 +181,7 @@ function drawCrowd(t) {
   crowd.persons.forEach(p => {
     drawPerson(crowd.x + p.ox, crowd.y + p.oy, p.color, p.phase, t);
   });
-  // Count label above crowd
-  const topY = crowd.y + Math.min(...crowd.persons.map(p => p.oy)) - 28;
-  if (crowd.count > 1) {
-    ctx.textAlign = 'center';
-    ctx.font = 'bold 22px Arial Black';
-    ctx.fillStyle = '#f0c040';
-    ctx.strokeStyle = '#0a0020';
-    ctx.lineWidth = 4;
-    ctx.strokeText('×' + crowd.count, crowd.x, topY);
-    ctx.fillText('×' + crowd.count, crowd.x, topY);
-  }
+  // Kein Ergebnis anzeigen — Spieler muss selbst rechnen!
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -330,23 +320,22 @@ function drawWall(ob) {
 
   for (let i = 0; i < NUM_DOORS; i++) {
     const x = i * dW;
-    const isCorrect = answers[i] === ob.answer;
 
-    // Wall panel
+    // Alle Felder identisch — kein Hinweis welches richtig ist!
     const g = ctx.createLinearGradient(x, y, x+dW, y+WALL_H);
-    g.addColorStop(0, isCorrect ? '#064e3b' : '#1e1b4b');
-    g.addColorStop(1, isCorrect ? '#065f46' : '#312e81');
+    g.addColorStop(0, '#1e1b4b');
+    g.addColorStop(1, '#312e81');
     ctx.fillStyle = g;
     ctx.fillRect(x, y, dW, WALL_H);
 
-    // Border
-    ctx.strokeStyle = isCorrect ? '#10b981' : '#4c1d95';
+    // Einheitlicher Rahmen
+    ctx.strokeStyle = '#6d28d9';
     ctx.lineWidth = 2; ctx.strokeRect(x+1, y+1, dW-2, WALL_H-2);
 
-    // Number
+    // Zahl — alle gleiche Farbe
     ctx.textAlign = 'center';
     ctx.font = 'bold 30px Arial Black';
-    ctx.fillStyle = isCorrect ? '#6ee7b7' : '#c4b5fd';
+    ctx.fillStyle = '#e9d5ff';
     ctx.strokeStyle = '#0a0020'; ctx.lineWidth = 4;
     ctx.strokeText(answers[i], x + dW/2, y + WALL_H/2 + 10);
     ctx.fillText(answers[i], x + dW/2, y + WALL_H/2 + 10);
@@ -358,10 +347,13 @@ function drawWall(ob) {
   ctx.strokeRect(0, y, W, WALL_H);
   ctx.shadowBlur = 0;
 
-  // Label above wall
-  ctx.textAlign = 'center'; ctx.font = 'bold 14px Arial';
-  ctx.fillStyle = '#e9d5ff';
-  ctx.fillText('WÄHLE DAS RICHTIGE ERGEBNIS!', W/2, y - 8);
+  // Gleichung oben anzeigen (ohne Ergebnis)
+  ctx.textAlign = 'center'; ctx.font = 'bold 15px Arial Black';
+  ctx.fillStyle = '#f0c040';
+  ctx.strokeStyle = '#0a0020'; ctx.lineWidth = 3;
+  const eq = factorA + ' × ' + factorB + ' = ?';
+  ctx.strokeText(eq, W/2, y - 10);
+  ctx.fillText(eq, W/2, y - 10);
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
